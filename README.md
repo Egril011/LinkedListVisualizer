@@ -1,1 +1,1 @@
-# LinkedLisVisualizer
+# LinkedListVisualizer
