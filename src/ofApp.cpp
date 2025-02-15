@@ -37,37 +37,54 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void ofApp::draw() {
 	node* newNode = llist.head;
 	float xPos = 100.f;
 
 	while (newNode) {
-		
-		//Pour imprimer les Nodes
+
+		//Pour imprimer la circumference du nombre de la linkedList
 		ofSetColor(255);
 		ofDrawCircle(xPos, 200, newNode->data);
-		
-		//Pour imprime le nombre des Nodes
+
+		//Pour imprime le nombre de la linkedList
 		ofSetColor(0);
 		ofDrawBitmapString(newNode->data, xPos, 200);
 
+		//Imprime des fleches pour qui vous au autres nodes de la linkedList
+
+
 		//Changer de Node et agmenter le xPos
-		newNode = newNode->next;
 		xPos += 200.f;
-	}	
+	}
 }
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
 	std::srand(time(0));
 
-	if (key == 'q') {
+	if(key == 'q') {
 		llist.insertAtHead(10 + std::rand() % 91 );
 	}
 
-	if (key == 'w') {
+	if(key == 'w') {
 		llist.insertAtTail(10 + std::rand() % 91);
+	}
+	
+	if(key == 'a') {
+		llist.deleteHead();
+	}
+
+	if(key == 's') {
+		llist.deleteTail();
+	}
+
+	if (key == 'e') {
+
 	}
 }
 
@@ -150,4 +167,39 @@ void linkedList::insertAtTail(int value) {
 	}
 
 	temp->next = newNode;
+}
+//----------------------------------------------------------------
+//Pour supprimer la head de la linkedList 
+void linkedList::deleteHead() {
+
+	if (head == nullptr) {
+		return;
+	}
+
+	node* temp = head;
+	head = head->next;
+	delete temp;
+}
+//---------------------------------------------------------------
+//Pour surpprimer la Tail de la linkedList
+void linkedList::deleteTail() {
+
+	//s'il n'y pas de head encore 
+	if (head == nullptr) {
+		return;
+	}
+
+	//si le prochain est nullptr supprimer la head
+	if (head->next == nullptr) {
+		delete head;
+		head = nullptr;
+		return;
+	}
+
+	node* temp = head;
+	while (temp->next->next != nullptr) {
+		temp = temp->next;
+	}
+
+	temp->next = temp->next->next;
 }
