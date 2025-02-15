@@ -3,77 +3,58 @@
 #include "ctime"
 
 //--------------------------------------------------------------
-class node {
-	public:
-		int data;
-		node* next;
-
-		node(int value) {
-			data = value;
-			next = nullptr;
-	}
-};
-//--------------------------------------------------------------
-class linkedList {
-	public:
-		node* head;
-
-		void insertAtHead(int value);
-		void insertAtTail(int value);
-		void deleteHead();
-		void deleteTail();
-};
-
-linkedList llist;
-
-//--------------------------------------------------------------
 void ofApp::setup() {
-}
+	std::srand(time(0));
 
+	//Utilisation de internet pour les aspect de camera pour la faire bouger de gauche à droit
+	//https://openframeworks.cc///documentation/3d/ofCamera/
+	cam.setPosition(cameraX, 0, 0);
+	cam.lookAt(glm::vec3(0, 0, 0));
+}
 //--------------------------------------------------------------
 void ofApp::update(){
-
-
+	cam.setPosition(cameraX, 0, 500);
 }
-
+// Implement the linked list sorting function
 //--------------------------------------------------------------
 void ofApp::draw() {
 	node* newNode = llist.head;
 	float xPos = 100.f;
 
+	cam.begin();
+
 	while (newNode) {
 
 		//Pour Dessiner la circumference du nombre de la linkedList
 		ofSetColor(255);
-		ofDrawCircle(xPos, 200, newNode->data);
+		ofDrawCircle(xPos, 100, newNode->data);
 
 		//Pour Dessiner le nombre de la linkedList
 		ofSetColor(0);
-		ofDrawBitmapString(newNode->data, xPos, 200);
-
+		ofDrawBitmapString(newNode->data, xPos, 100);
 
 		if (newNode->next) {
 			
+			//Ai pour cette section (oscillation)
+			//---------------------------------------------------//
 			float time = ofGetElapsedTimef();
 			float oscillation = sin(time * 2.0) * speedOscillation;  
+			//---------------------------------------------------//
 
-			ofDrawArrow(glm::vec3(xPos + newNode->data, oscillation + 200, 0),
-				glm::vec3((xPos + 200) - newNode->next->data, 200, 0));
+			ofDrawArrow(glm::vec3(xPos + newNode->data, oscillation + 100, 0),
+				glm::vec3((xPos + 200) - newNode->next->data, 100, 0));
 		}
 
-		//Changer de Node et agmenter le xPos
+		//Changer de Node et agmenter xPos
 		xPos += 200.f;
 		newNode = newNode->next;
 	}
+
+	cam.end();
 }
-
-
-
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
-	std::srand(time(0));
 
 	switch (key) {
 
@@ -101,7 +82,12 @@ void ofApp::keyPressed(int key){
 			decreaseOscillation();
 			break;
 
-		case 'e':
+		case OF_KEY_LEFT:
+			cameraX -= 20;
+			break;
+
+		case OF_KEY_RIGHT:
+			cameraX += 20;
 			break;
 
 		default:
@@ -240,3 +226,4 @@ void ofApp::decreaseOscillation() {
 		speedOscillation -= 20;
 	}
 }
+//-------------------------------------------------------------
