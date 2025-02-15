@@ -2,22 +2,22 @@
 #include "ofMain.h"
 
 //--------------------------------------------------------------
-class node {
+class Node {
 public:
 	int data;
-	node* next;
+	Node* next;
 
-	node(int value) {
+	Node(int value) {
 		data = value;
 		next = nullptr;
 	}
 };
 //--------------------------------------------------------------
-class linkedList {
+class LinkedList {
 public:
-	node* head;
+	Node* head;
 
-	linkedList() {
+	LinkedList() {
 		head = nullptr;
 	}
 
@@ -33,7 +33,7 @@ class ofApp : public ofBaseApp{
 
 		int speedOscillation = 10;
 		float cameraX = 0.f;
-		linkedList llist;
+		LinkedList llist;
 		ofCamera cam;
 
 
@@ -55,4 +55,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		void increaseOscillation();
 		void decreaseOscillation();
+
+		Node* split(Node* head);
+		Node* merge(Node* first, Node* second);
+		Node* mergeSort(Node* head);
 };

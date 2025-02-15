@@ -6,7 +6,7 @@
 void ofApp::setup() {
 	std::srand(time(0));
 
-	//Utilisation de internet pour les aspect de camera pour la faire bouger de gauche à droit
+	//Utilisation d'internet pour les aspects de camera pour la faire bouger de gauche à droit
 	//https://openframeworks.cc///documentation/3d/ofCamera/
 	cam.setPosition(cameraX, 0, 0);
 	cam.lookAt(glm::vec3(0, 0, 0));
@@ -15,10 +15,9 @@ void ofApp::setup() {
 void ofApp::update(){
 	cam.setPosition(cameraX, 0, 500);
 }
-// Implement the linked list sorting function
 //--------------------------------------------------------------
 void ofApp::draw() {
-	node* newNode = llist.head;
+	Node* newNode = llist.head;
 	float xPos = 100.f;
 
 	cam.begin();
@@ -45,7 +44,7 @@ void ofApp::draw() {
 				glm::vec3((xPos + 200) - newNode->next->data, 100, 0));
 		}
 
-		//Changer de Node et agmenter xPos
+		//Aller à la prochaine Node et agmenter xPos
 		xPos += 200.f;
 		newNode = newNode->next;
 	}
@@ -58,28 +57,39 @@ void ofApp::keyPressed(int key){
 
 	switch (key) {
 
-		case 'q': 
+		//Insérer à la tête
+		case 'q':
 			llist.insertAtHead(10 + std::rand() % 91);
 			break;
 
+		//Insérer à la queue
 		case 'w':
 			llist.insertAtTail(10 + std::rand() % 91);
 			break;
 		
+		//Enlever la tête
 		case 'a':
 			llist.deleteHead();
 			break;
 
+		//Enlever la queue
 		case 's':
 			llist.deleteTail();
 			break;
 
+		//Augmenter l'oscillation
 		case 'z':
 			increaseOscillation();
 			break;
 
+		//Diminuer l'oscillation
 		case 'x':
 			decreaseOscillation();
+			break;
+
+		//Trier la linkedList
+		case 'e':
+			llist.head = mergeSort(llist.head);
 			break;
 
 		case OF_KEY_LEFT:
@@ -145,9 +155,9 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 //--------------------------------------------------------------
-//Pour inserer un nombre a la head de la linkedList
-void linkedList::insertAtHead(int value) {
-	node* newNode = new node(value);
+//Pour insérer un nombre à la tête de la linkedList
+void LinkedList::insertAtHead(int value) {
+	Node* newNode = new Node(value);
 
 	if (head == nullptr) {
 		head = newNode;
@@ -159,16 +169,16 @@ void linkedList::insertAtHead(int value) {
 	
 }
 //----------------------------------------------------------------
-//Pour inserer un nombre a la Tail de la linkedList
-void linkedList::insertAtTail(int value) {
+//Pour insérer un nombre a la queue de la linkedList
+void LinkedList::insertAtTail(int value) {
 	
-	node* newNode = new node(value);
+	Node* newNode = new Node(value);
 	if (head == nullptr) {
 		head = newNode;
 		return;
 	}
 
-	node* temp = head;
+	Node* temp = head;
 	while (temp->next != nullptr) {
 		temp = temp->next;
 	}
@@ -176,20 +186,20 @@ void linkedList::insertAtTail(int value) {
 	temp->next = newNode;
 }
 //----------------------------------------------------------------
-//Pour supprimer la head de la linkedList 
-void linkedList::deleteHead() {
+//Pour supprimer la tête de la linkedList 
+void LinkedList::deleteHead() {
 
 	if (head == nullptr) {
 		return;
 	}
 
-	node* temp = head;
+	Node* temp = head;
 	head = head->next;
 	delete temp;
 }
 //---------------------------------------------------------------
-//Pour surpprimer la Tail de la linkedList
-void linkedList::deleteTail() {
+//Pour surpprimer la queue de la linkedList
+void LinkedList::deleteTail() {
 
 	//s'il n'y pas de head encore 
 	if (head == nullptr) {
@@ -203,7 +213,7 @@ void linkedList::deleteTail() {
 		return;
 	}
 
-	node* temp = head;
+	Node* temp = head;
 	while (temp->next->next != nullptr) {
 		temp = temp->next;
 	}
@@ -227,3 +237,53 @@ void ofApp::decreaseOscillation() {
 	}
 }
 //-------------------------------------------------------------
+//Trier la linkedList en ordre croissant 
+//Puis utilisation: https://www.geeksforgeeks.org/merge-sort-for-linked-list/
+Node* ofApp::split(Node* head) {
+	Node* fast = head;
+	Node* slow = head;
+
+	while (fast != nullptr && fast->next != nullptr) {
+		fast = fast->next->next;
+		
+		if (fast != nullptr) {
+			slow = slow->next;
+		}
+	}
+
+	Node* temp = slow->next;
+	slow->next = nullptr;
+	return temp;
+}
+
+Node* ofApp::merge(Node* first, Node* second) {
+	if(first == nullptr) {
+		return second;
+	}
+
+	if (second == nullptr) {
+		return first;
+	}
+
+	if (first->data < second->data) {
+		first->next = merge(first->next, second);
+		return first;
+	}
+	else {
+		second->next = merge(first, second->next);
+		return second;
+	}
+}
+
+Node* ofApp::mergeSort(Node* head) {
+	if (head == nullptr || head->next == nullptr) {
+		return head;
+	}
+
+	Node* second = split(head);
+
+	head = mergeSort(head);
+	second = mergeSort(second);
+
+	return merge(head, second);
+}
