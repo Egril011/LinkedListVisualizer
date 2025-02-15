@@ -43,19 +43,27 @@ void ofApp::draw() {
 
 	while (newNode) {
 
-		//Pour imprimer la circumference du nombre de la linkedList
+		//Pour Dessiner la circumference du nombre de la linkedList
 		ofSetColor(255);
 		ofDrawCircle(xPos, 200, newNode->data);
 
-		//Pour imprime le nombre de la linkedList
+		//Pour Dessiner le nombre de la linkedList
 		ofSetColor(0);
 		ofDrawBitmapString(newNode->data, xPos, 200);
 
-		//Imprime des fleches pour qui vous au autres nodes de la linkedList
 
+		if (newNode->next) {
+			
+			float time = ofGetElapsedTimef();
+			float oscillation = sin(time * 2.0) * speedOscillation;  
+
+			ofDrawArrow(glm::vec3(xPos + newNode->data, oscillation + 200, 0),
+				glm::vec3((xPos + 200) - newNode->next->data, 200, 0));
+		}
 
 		//Changer de Node et agmenter le xPos
 		xPos += 200.f;
+		newNode = newNode->next;
 	}
 }
 
@@ -67,24 +75,37 @@ void ofApp::keyPressed(int key){
 
 	std::srand(time(0));
 
-	if(key == 'q') {
-		llist.insertAtHead(10 + std::rand() % 91 );
-	}
+	switch (key) {
 
-	if(key == 'w') {
-		llist.insertAtTail(10 + std::rand() % 91);
-	}
-	
-	if(key == 'a') {
-		llist.deleteHead();
-	}
+		case 'q': 
+			llist.insertAtHead(10 + std::rand() % 91);
+			break;
 
-	if(key == 's') {
-		llist.deleteTail();
-	}
+		case 'w':
+			llist.insertAtTail(10 + std::rand() % 91);
+			break;
+		
+		case 'a':
+			llist.deleteHead();
+			break;
 
-	if (key == 'e') {
+		case 's':
+			llist.deleteTail();
+			break;
 
+		case 'z':
+			increaseOscillation();
+			break;
+
+		case 'x':
+			decreaseOscillation();
+			break;
+
+		case 'e':
+			break;
+
+		default:
+			break;
 	}
 }
 
@@ -202,4 +223,20 @@ void linkedList::deleteTail() {
 	}
 
 	temp->next = temp->next->next;
+}
+//--------------------------------------------------------------
+//Pour augmenter l'ocsillation
+void ofApp::increaseOscillation() {
+	speedOscillation += 20;
+}
+//-------------------------------------------------------------
+//Pour diminuer l'oscillation
+void ofApp::decreaseOscillation() {
+
+	if (speedOscillation == 10) {
+		speedOscillation == 10;
+	}
+	else {
+		speedOscillation -= 20;
+	}
 }

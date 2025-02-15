@@ -7,9 +7,12 @@ class ofApp : public ofBaseApp{
 
 	public:
 
+		int speedOscillation = 10;
+
 		void setup();
 		void update();
 		void draw();
+
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -22,4 +25,6 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		void increaseOscillation();
+		void decreaseOscillation();
 };
