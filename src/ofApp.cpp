@@ -10,10 +10,20 @@ void ofApp::setup() {
 	//https://openframeworks.cc///documentation/3d/ofCamera/
 	cam.setPosition(cameraX, 0, 0);
 	cam.lookAt(glm::vec3(0, 0, 0));
+
+	ofSetBackgroundColor(0);
 }
 //--------------------------------------------------------------
 void ofApp::update(){
-	cam.setPosition(cameraX, 0, 500);
+	
+//Pour pas que la camera va trop à gauche pour rien
+	if (cameraX < 0) {
+		cam.setPosition(0, 0, 500);
+		cameraX = 0;
+	}
+	else {
+		cam.setPosition(cameraX, 0, 500);
+	}
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
@@ -33,21 +43,34 @@ void ofApp::draw() {
 		ofDrawBitmapString(newNode->data, xPos, 100);
 
 		if (newNode->next) {
-			
-			//Ai pour cette section (oscillation)
-			//---------------------------------------------------//
+			//Pour dessiner les lignes qui oscille
 			float time = ofGetElapsedTimef();
-			float oscillation = sin(time * 2.0) * speedOscillation;  
-			//---------------------------------------------------//
+			float oscillation = sin(time) * speedOscillation;
 
-			ofDrawArrow(glm::vec3(xPos + newNode->data, oscillation + 100, 0),
-				glm::vec3((xPos + 200) - newNode->next->data, 100, 0));
+			ofSetColor(255);
+			ofDrawArrow(glm::vec3(xPos + newNode->data, 100, 0),
+				glm::vec3((xPos + 200) - newNode->next->data, oscillation + 100, 0));
 		}
 
 		//Aller à la prochaine Node et agmenter xPos
 		xPos += 200.f;
 		newNode = newNode->next;
 	}
+
+	//Informations du programme 
+	ofSetColor(255);
+	string text = "Informations:\n"
+		"\"q\" Pour pour insérer un noeud au début\n"
+		"\"w\" Pour insérer un noeud à la fin\n"
+		"\"a\" Pour supprimer le noeud en tete\n"
+		"\"s\" Pour supprimer le noeud en queue\n"
+		"\"e\" Pour trier la linkedList\n"
+		"\"z\" Pour augmenter l'oscillation\n"
+		"\"x\" Pour diminuer l'oscillation\n"
+		"\"->\" Pour bouger la caméra à gauche\n"
+		"\"<-\" Pour bouger la caméra à droite\n"
+		"\t Le programme à exécuté: " + executed;
+	ofDrawBitmapString(text, cameraX - 300, -150);
 
 	cam.end();
 }
@@ -59,36 +82,43 @@ void ofApp::keyPressed(int key){
 
 		//Insérer à la tête
 		case 'q':
+			executed = "Insérer un noeud au début";
 			llist.insertAtHead(10 + std::rand() % 91);
 			break;
 
 		//Insérer à la queue
 		case 'w':
+			executed = "Insérer un noeud à la fin";
 			llist.insertAtTail(10 + std::rand() % 91);
 			break;
 		
 		//Enlever la tête
 		case 'a':
+			executed = "Supprimer le noeud en tete";
 			llist.deleteHead();
 			break;
 
 		//Enlever la queue
 		case 's':
+			executed = "Supprimer le noeud à la fin";
 			llist.deleteTail();
 			break;
 
 		//Augmenter l'oscillation
 		case 'z':
+			executed = "Augmenter l'oscillation";
 			increaseOscillation();
 			break;
 
 		//Diminuer l'oscillation
 		case 'x':
+			executed = "Diminuer l'oscillation";
 			decreaseOscillation();
 			break;
 
 		//Trier la linkedList
 		case 'e':
+			executed = "Trier la linkedList";
 			llist.head = mergeSort(llist.head);
 			break;
 
