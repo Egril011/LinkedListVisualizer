@@ -30,12 +30,15 @@ public:
 class ofApp : public ofBaseApp{
 
 	public:
-		int speedOscillation = 10;
+		int oscillationSpeed = 0;
+		float oscillationTime = 0;
+		float oscillation = 0;
+
 		float cameraX = 0.f;
 		LinkedList llist;
 		ofCamera cam;
 		string executed;
-		float oscillation = 5;
+		
 
 
 		void setup();

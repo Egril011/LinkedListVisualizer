@@ -24,36 +24,43 @@ void ofApp::update(){
 	else {
 		cam.setPosition(cameraX, 0, 500);
 	}
+
+	oscillationTime = ofGetElapsedTimef();
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
 	Node* newNode = llist.head;
 	float xPos = 100.f;
-
+	
 	cam.begin();
 
 	while (newNode) {
+		
+		//Aide du cours 
+		oscillation = sin(oscillationTime * 2 + xPos) * oscillationSpeed;
 
 		//Pour Dessiner la circumference du nombre de la linkedList
 		ofSetColor(255);
-		ofDrawCircle(xPos, 100, newNode->data);
+		ofDrawCircle(xPos, 100 + oscillation, newNode->data);
 
 		//Pour Dessiner le nombre de la linkedList
 		ofSetColor(0);
-		ofDrawBitmapString(newNode->data, xPos, 100);
+		ofDrawBitmapString(newNode->data, xPos, 100 + oscillation);
 
 		if (newNode->next) {
+			
 			//Pour dessiner les lignes qui oscille
-			float time = ofGetElapsedTimef();
-			float oscillation = sin(time) * speedOscillation;
-
 			ofSetColor(255);
-			ofDrawArrow(glm::vec3(xPos + newNode->data, 100, 0),
-				glm::vec3((xPos + 200) - newNode->next->data, oscillation + 100, 0));
+			
+			float nextOscillation = sin(oscillationTime * 2 + (xPos + 200)) * oscillationSpeed;
+			ofDrawArrow(glm::vec3((xPos + newNode->data), 100 + oscillation, 0), 
+				glm::vec3(((xPos + 200) - newNode->data), 100 + oscillation, 0));
+
+			//Agmenter xPos
+			xPos += 200.f;
 		}
 
-		//Aller à la prochaine Node et agmenter xPos
-		xPos += 200.f;
+		//Aller à la prochaine Node
 		newNode = newNode->next;
 	}
 
@@ -253,17 +260,17 @@ void LinkedList::deleteTail() {
 //--------------------------------------------------------------
 //Pour augmenter l'ocsillation
 void ofApp::increaseOscillation() {
-	speedOscillation += 20;
+	oscillationSpeed += 20;
 }
 //-------------------------------------------------------------
 //Pour diminuer l'oscillation
 void ofApp::decreaseOscillation() {
 
-	if (speedOscillation == 10) {
-		speedOscillation == 10;
+	if (oscillationSpeed == 0) {
+		oscillationSpeed == 0;
 	}
 	else {
-		speedOscillation -= 20;
+		oscillationSpeed -= 20;
 	}
 }
 //-------------------------------------------------------------
