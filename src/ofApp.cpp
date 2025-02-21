@@ -1,7 +1,6 @@
 #include "ofApp.h"
 #include "cstdlib"
 #include "ctime"
-
 //--------------------------------------------------------------
 void ofApp::setup() {
 	std::srand(time(0));
@@ -53,8 +52,8 @@ void ofApp::draw() {
 			ofSetColor(255);
 			
 			float nextOscillation = sin(oscillationTime * 2 + (xPos + 200)) * oscillationSpeed;
-			ofDrawArrow(glm::vec3((xPos + newNode->data), 100 + oscillation, 0), 
-				glm::vec3(((xPos + 200) - newNode->data), 100 + oscillation, 0));
+			ofDrawArrow(glm::vec3(xPos, 100 + oscillation, 0), 
+				glm::vec3((xPos + 200), 100 + nextOscillation, 0));
 
 			//Agmenter xPos
 			xPos += 200.f;
